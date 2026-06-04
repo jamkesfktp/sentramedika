@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import StatCard from './components/StatCard';
 import ComparisonChart from './components/ComparisonChart';
+import TrendChart from './components/TrendChart';
 import DataTable from './components/DataTable';
 import dataJson from './assets/data.json';
 import { Users, Coins, Calculator, TrendingUp, Menu } from 'lucide-react';
@@ -23,6 +24,10 @@ const App = () => {
   const topDiagUtama = selected === 'All' ? [] : currentDataJson.hospitals[selected].top10_diag_utama;
   const topDiagSekunder = selected === 'All' ? [] : currentDataJson.hospitals[selected].top10_diag_sekunder;
   const topTindakan = selected === 'All' ? [] : currentDataJson.hospitals[selected].top10_tindakan;
+  
+  const trendBulanan = selected === 'All' 
+    ? (currentDataJson.trend_bulanan || []) 
+    : (currentDataJson.hospitals[selected].trend_bulanan || []);
 
   const caseColumns = [
     { label: 'Kode INACBG', key: 'INACBG' },
@@ -95,6 +100,10 @@ const App = () => {
           <StatCard title="Total Tarif iDRG" value={currentData.tarif_idrg} icon={Calculator} isCurrency={true} />
           <StatCard title="Selisih iDRG - INACBG" value={currentData.selisih} icon={TrendingUp} isCurrency={true} isDiff={true} />
         </div>
+
+        {trendBulanan && trendBulanan.length > 0 && (
+          <TrendChart data={trendBulanan} title={`Tren Pendapatan Bulanan (${selected === 'All' ? 'Semua Cabang' : selected})`} />
+        )}
 
         {selected !== 'All' && (
           <>
