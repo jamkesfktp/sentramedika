@@ -61,9 +61,10 @@ const App = () => {
             </button>
             <div>
               <h1>Dashboard Analisis iDRG vs INACBG</h1>
-            <p style={{ color: 'var(--text-muted)', marginTop: '0.25rem' }}>
-              {selected === 'All' ? 'Ringkasan Seluruh Cabang Sentra Medika' : `Detail Analisis Cabang ${selected}`}
-            </p>
+              <p style={{ color: 'var(--text-muted)', marginTop: '0.25rem' }}>
+                {selected === 'All' ? 'Ringkasan Seluruh Cabang Sentra Medika' : `Detail Analisis Cabang ${selected}`}
+              </p>
+            </div>
           </div>
           <div className="header-filters" style={{ display: 'flex', gap: '0.5rem', background: 'var(--bg-card)', padding: '0.25rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
             {['All', '1', '2'].map((f) => (
