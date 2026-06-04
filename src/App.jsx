@@ -8,18 +8,20 @@ import { Users, Coins, Calculator, TrendingUp } from 'lucide-react';
 
 const App = () => {
   const [selected, setSelected] = useState('All');
+  const [ptdFilter, setPtdFilter] = useState('All'); // 'All', '1' (Ranap), '2' (Rajal)
   
-  const hospitals = Object.keys(dataJson.hospitals);
+  const currentDataJson = dataJson[ptdFilter] || dataJson;
+  const hospitals = currentDataJson.hospitals ? Object.keys(currentDataJson.hospitals) : [];
   
   const currentData = selected === 'All' 
-    ? dataJson.summary 
-    : dataJson.hospitals[selected].summary;
+    ? currentDataJson.summary 
+    : currentDataJson.hospitals[selected].summary;
 
-  const topUntung = selected === 'All' ? [] : dataJson.hospitals[selected].top25_untung;
-  const topRugi = selected === 'All' ? [] : dataJson.hospitals[selected].top25_rugi;
-  const topDiagUtama = selected === 'All' ? [] : dataJson.hospitals[selected].top10_diag_utama;
-  const topDiagSekunder = selected === 'All' ? [] : dataJson.hospitals[selected].top10_diag_sekunder;
-  const topTindakan = selected === 'All' ? [] : dataJson.hospitals[selected].top10_tindakan;
+  const topUntung = selected === 'All' ? [] : currentDataJson.hospitals[selected].top25_untung;
+  const topRugi = selected === 'All' ? [] : currentDataJson.hospitals[selected].top25_rugi;
+  const topDiagUtama = selected === 'All' ? [] : currentDataJson.hospitals[selected].top10_diag_utama;
+  const topDiagSekunder = selected === 'All' ? [] : currentDataJson.hospitals[selected].top10_diag_sekunder;
+  const topTindakan = selected === 'All' ? [] : currentDataJson.hospitals[selected].top10_tindakan;
 
   const caseColumns = [
     { label: 'Kode INACBG', key: 'INACBG' },
@@ -55,6 +57,27 @@ const App = () => {
             <p style={{ color: 'var(--text-muted)', marginTop: '0.25rem' }}>
               {selected === 'All' ? 'Ringkasan Seluruh Cabang Sentra Medika' : `Detail Analisis Cabang ${selected}`}
             </p>
+          </div>
+          <div style={{ display: 'flex', gap: '0.5rem', background: 'var(--bg-card)', padding: '0.25rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+            {['All', '1', '2'].map((f) => (
+              <button
+                key={f}
+                onClick={() => setPtdFilter(f)}
+                style={{
+                  padding: '0.5rem 1rem',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontWeight: '500',
+                  fontSize: '0.875rem',
+                  backgroundColor: ptdFilter === f ? 'var(--accent-red)' : 'transparent',
+                  color: ptdFilter === f ? '#fff' : 'var(--text-muted)',
+                  transition: 'all 0.2s'
+                }}
+              >
+                {f === 'All' ? 'Semua' : f === '1' ? 'Rawat Inap' : 'Rawat Jalan'}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -112,8 +135,8 @@ const App = () => {
               <ComparisonChart 
                 data={hospitals.map(h => ({
                   name: h,
-                  Total_Tarif_INACBG: dataJson.hospitals[h].summary.tarif_inacbg,
-                  Total_Tarif_iDRG: dataJson.hospitals[h].summary.tarif_idrg,
+                  Total_Tarif_INACBG: currentDataJson.hospitals[h].summary.tarif_inacbg,
+                  Total_Tarif_iDRG: currentDataJson.hospitals[h].summary.tarif_idrg,
                   fullDesc: `Cabang ${h}`
                 }))} 
                 title="" 
