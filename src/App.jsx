@@ -58,7 +58,7 @@ const App = () => {
               {selected === 'All' ? 'Ringkasan Seluruh Cabang Sentra Medika' : `Detail Analisis Cabang ${selected}`}
             </p>
           </div>
-          <div style={{ display: 'flex', gap: '0.5rem', background: 'var(--bg-card)', padding: '0.25rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+          <div className="header-filters" style={{ display: 'flex', gap: '0.5rem', background: 'var(--bg-card)', padding: '0.25rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
             {['All', '1', '2'].map((f) => (
               <button
                 key={f}
