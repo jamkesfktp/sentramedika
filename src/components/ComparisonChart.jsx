@@ -33,11 +33,13 @@ const ComparisonChart = ({ data, title }) => {
             <YAxis stroke="var(--text-muted)" tickFormatter={formatRupiah} />
             <Tooltip 
               formatter={(value) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(value)}
-              contentStyle={{ backgroundColor: 'var(--bg-dark)', borderColor: 'var(--border-color)', color: '#fff' }}
+              contentStyle={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-color)', color: 'var(--text-main)', borderRadius: '8px' }}
+              itemStyle={{ color: 'var(--text-main)' }}
+              cursor={{fill: 'rgba(0,0,0,0.03)'}}
             />
             <Legend />
-            <Bar dataKey="INACBG" fill="var(--accent-rose)" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="iDRG" fill="var(--accent-emerald)" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="INACBG" fill="var(--accent-light-blue)" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="iDRG" fill="var(--accent-navy)" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

@@ -67,6 +67,7 @@ const App = () => {
         {selected !== 'All' && (
           <>
             <ComparisonChart data={topUntung} title="Top 10 Kasus Menguntungkan (iDRG vs INACBG)" />
+            <ComparisonChart data={topRugi} title="Top 10 Kasus Merugikan (iDRG vs INACBG)" />
             
             <DataTable 
               title="Top 25 Kasus Paling Menguntungkan" 
