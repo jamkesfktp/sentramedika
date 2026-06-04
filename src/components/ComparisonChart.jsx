@@ -6,8 +6,13 @@ const ComparisonChart = ({ data, title }) => {
   if (!data || data.length === 0) return null;
   
   const chartData = data.map(item => {
-    // Determine the label name dynamically
-    const desc = item.name || item.Deskripsi || item.IDRG_DRG_DESCRIPTION || item.DESKRIPSI_INACBG || 'Unknown';
+    // Determine the label name dynamically, avoiding 'Unknown' if a better desc is available
+    let desc = item.name;
+    if (!desc || desc === 'Unknown') desc = item.Deskripsi;
+    if (!desc || desc === 'Unknown') desc = item.DESKRIPSI_INACBG;
+    if (!desc || desc === 'Unknown') desc = item.IDRG_DRG_DESCRIPTION;
+    if (!desc) desc = 'Unknown';
+    
     return {
       name: desc.length > 15 ? desc.substring(0, 15) + '...' : desc,
       // Avoid using 'item.INACBG' because it now contains the string code (e.g. 'J-4-10-I')

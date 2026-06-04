@@ -112,8 +112,8 @@ const App = () => {
               <ComparisonChart 
                 data={hospitals.map(h => ({
                   name: h,
-                  INACBG: dataJson.hospitals[h].summary.tarif_inacbg,
-                  iDRG: dataJson.hospitals[h].summary.tarif_idrg,
+                  Total_Tarif_INACBG: dataJson.hospitals[h].summary.tarif_inacbg,
+                  Total_Tarif_iDRG: dataJson.hospitals[h].summary.tarif_idrg,
                   fullDesc: `Cabang ${h}`
                 }))} 
                 title="" 
