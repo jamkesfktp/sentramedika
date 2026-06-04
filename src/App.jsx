@@ -4,11 +4,12 @@ import StatCard from './components/StatCard';
 import ComparisonChart from './components/ComparisonChart';
 import DataTable from './components/DataTable';
 import dataJson from './assets/data.json';
-import { Users, Coins, Calculator, TrendingUp } from 'lucide-react';
+import { Users, Coins, Calculator, TrendingUp, Menu } from 'lucide-react';
 
 const App = () => {
   const [selected, setSelected] = useState('All');
   const [ptdFilter, setPtdFilter] = useState('All'); // 'All', '1' (Ranap), '2' (Rajal)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const currentDataJson = dataJson[ptdFilter] || dataJson;
   const hospitals = currentDataJson.hospitals ? Object.keys(currentDataJson.hospitals) : [];
@@ -47,13 +48,19 @@ const App = () => {
       <Sidebar 
         hospitals={hospitals} 
         selectedHospital={selected} 
-        onSelect={setSelected} 
+        onSelect={(h) => { setSelected(h); setIsSidebarOpen(false); }} 
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
       />
       
       <div className="main-content">
         <div className="header">
-          <div>
-            <h1>Dashboard Analisis iDRG vs INACBG</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <button className="mobile-menu-btn" onClick={() => setIsSidebarOpen(true)}>
+              <Menu size={24} />
+            </button>
+            <div>
+              <h1>Dashboard Analisis iDRG vs INACBG</h1>
             <p style={{ color: 'var(--text-muted)', marginTop: '0.25rem' }}>
               {selected === 'All' ? 'Ringkasan Seluruh Cabang Sentra Medika' : `Detail Analisis Cabang ${selected}`}
             </p>

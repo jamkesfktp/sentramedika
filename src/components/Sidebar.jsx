@@ -1,12 +1,17 @@
 import React from 'react';
-import { Activity, LayoutDashboard, Building2 } from 'lucide-react';
+import { Activity, LayoutDashboard, Building2, X } from 'lucide-react';
 
-const Sidebar = ({ hospitals, selectedHospital, onSelect }) => {
+const Sidebar = ({ hospitals, selectedHospital, onSelect, isOpen, onClose }) => {
   return (
-    <div className="sidebar">
-      <div className="sidebar-title">
-        <span className="logo-icon"><Activity size={18} strokeWidth={3} /></span>
-        Sentra Medika
+    <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+      <div className="sidebar-title" style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <span className="logo-icon"><Activity size={18} strokeWidth={3} /></span>
+          Sentra Medika
+        </div>
+        <button className="mobile-close-btn" onClick={onClose} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}>
+          <X size={24} />
+        </button>
       </div>
       
       <div className="sidebar-nav-scroll">
