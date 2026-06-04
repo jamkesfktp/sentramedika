@@ -27,9 +27,9 @@ const ComparisonChart = ({ data, title }) => {
       </div>
       <div className="chart-wrapper">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.1)" />
-            <XAxis dataKey="name" stroke="var(--text-muted)" tick={{fill: 'var(--text-muted)', fontSize: 12}} angle={-45} textAnchor="end" />
+          <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
+            <XAxis dataKey="name" stroke="var(--text-muted)" tick={{fontSize: 12}} angle={-45} textAnchor="end" interval={0} height={60} />
             <YAxis stroke="var(--text-muted)" tickFormatter={formatRupiah} />
             <Tooltip 
               formatter={(value) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(value)}
@@ -37,7 +37,7 @@ const ComparisonChart = ({ data, title }) => {
               itemStyle={{ color: 'var(--text-main)' }}
               cursor={{fill: 'rgba(0,0,0,0.03)'}}
             />
-            <Legend />
+            <Legend verticalAlign="top" height={36} />
             <Bar dataKey="INACBG" fill="var(--accent-light-blue)" radius={[4, 4, 0, 0]} />
             <Bar dataKey="iDRG" fill="var(--accent-navy)" radius={[4, 4, 0, 0]} />
           </BarChart>

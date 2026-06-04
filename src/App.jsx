@@ -18,6 +18,7 @@ const App = () => {
   const topUntung = selected === 'All' ? [] : dataJson.hospitals[selected].top25_untung;
   const topRugi = selected === 'All' ? [] : dataJson.hospitals[selected].top25_rugi;
   const topDiagUtama = selected === 'All' ? [] : dataJson.hospitals[selected].top10_diag_utama;
+  const topDiagSekunder = selected === 'All' ? [] : dataJson.hospitals[selected].top10_diag_sekunder;
   const topTindakan = selected === 'All' ? [] : dataJson.hospitals[selected].top10_tindakan;
 
   const caseColumns = [
@@ -84,6 +85,12 @@ const App = () => {
             <DataTable 
               title="Top 10 Diagnosa Utama" 
               data={topDiagUtama} 
+              columns={top10Columns} 
+            />
+
+            <DataTable 
+              title="Top 10 Diagnosa Sekunder" 
+              data={topDiagSekunder} 
               columns={top10Columns} 
             />
 
