@@ -18,6 +18,27 @@ const formatRupiah = (value) => {
   return `Rp ${value}`;
 };
 
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', padding: '10px', borderRadius: '8px', boxShadow: 'var(--card-shadow)' }}>
+        <p style={{ margin: '0 0 5px 0', fontWeight: 'bold', color: 'var(--text-main)' }}>{label}</p>
+        {payload.map((entry, index) => {
+          const isNegative = entry.value < 0;
+          const color = isNegative ? 'var(--accent-red)' : entry.color;
+          const formattedVal = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(entry.value);
+          return (
+            <div key={index} style={{ color: color, margin: '3px 0', fontSize: '14px' }}>
+              {entry.name}: <span style={{ fontWeight: '600' }}>{formattedVal}</span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+  return null;
+};
+
 const TrendChart = ({ data, title }) => {
   if (!data || data.length === 0) return null;
 
@@ -47,12 +68,7 @@ const TrendChart = ({ data, title }) => {
             <XAxis dataKey="name" stroke="var(--text-muted)" tick={{fontSize: 12}} />
             <YAxis yAxisId="left" stroke="var(--text-muted)" tickFormatter={formatRupiah} />
             <YAxis yAxisId="right" orientation="right" stroke="var(--text-muted)" tickFormatter={formatRupiah} />
-            <Tooltip 
-              formatter={(value) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(value)}
-              contentStyle={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-color)', color: 'var(--text-main)', borderRadius: '8px' }}
-              itemStyle={{ color: 'var(--text-main)' }}
-              cursor={{fill: 'rgba(0,0,0,0.03)'}}
-            />
+            <Tooltip content={<CustomTooltip />} cursor={{fill: 'rgba(0,0,0,0.03)'}} />
             <Legend verticalAlign="top" height={36} />
             
             <Bar yAxisId="left" dataKey="INACBG" name="Tarif INACBG" fill="var(--accent-light-blue)" radius={[4, 4, 0, 0]} />
