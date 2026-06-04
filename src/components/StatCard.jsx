@@ -16,7 +16,7 @@ const StatCard = ({ title, value, icon: Icon, isCurrency = false, isDiff = false
         <h3 style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: '600' }}>{title}</h3>
         {Icon && <Icon size={20} color="var(--accent-cyan)" />}
       </div>
-      <div style={{ fontSize: '1.5rem', fontWeight: '700' }} className={valueClass}>
+      <div className={`stat-value ${valueClass}`}>
         {isDiff && value > 0 ? '+' : ''}{formattedValue}
       </div>
     </div>

@@ -139,6 +139,13 @@ body {
   margin-bottom: 2rem;
 }
 
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
 .chart-section, .table-section {
   margin-bottom: 2rem;
 }
@@ -248,6 +255,10 @@ tr:hover td {
   
   .stats-grid {
     grid-template-columns: 1fr;
+  }
+  
+  .stat-value {
+    font-size: 1.25rem;
   }
   
   .chart-wrapper {
