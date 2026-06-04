@@ -10,9 +10,9 @@ const ComparisonChart = ({ data, title }) => {
     const desc = item.name || item.Deskripsi || item.IDRG_DRG_DESCRIPTION || item.DESKRIPSI_INACBG || 'Unknown';
     return {
       name: desc.length > 15 ? desc.substring(0, 15) + '...' : desc,
-      // Support either direct INACBG/iDRG properties or the Total_Tarif_* properties
-      INACBG: item.INACBG !== undefined ? item.INACBG : (item.Total_Tarif_INACBG || item.Total_INACBG || 0),
-      iDRG: item.iDRG !== undefined ? item.iDRG : (item.Total_Tarif_iDRG || item.Total_iDRG || 0),
+      // Avoid using 'item.INACBG' because it now contains the string code (e.g. 'J-4-10-I')
+      INACBG_VAL: Number(item.Total_Tarif_INACBG ?? item.INACBG_Tarif ?? item.Total_INACBG ?? 0),
+      iDRG_VAL: Number(item.Total_Tarif_iDRG ?? item.iDRG_Tarif ?? item.Total_iDRG ?? 0),
       fullDesc: item.fullDesc || desc
     };
   }).slice(0, 10);
@@ -38,8 +38,8 @@ const ComparisonChart = ({ data, title }) => {
               cursor={{fill: 'rgba(0,0,0,0.03)'}}
             />
             <Legend verticalAlign="top" height={36} />
-            <Bar dataKey="INACBG" fill="var(--accent-light-blue)" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="iDRG" fill="var(--accent-navy)" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="INACBG_VAL" name="INACBG" fill="var(--accent-light-blue)" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="iDRG_VAL" name="iDRG" fill="var(--accent-navy)" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
