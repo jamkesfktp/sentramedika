@@ -220,7 +220,7 @@ const App = () => {
                       type="checkbox"
                       checked={selectedMonths.includes(m)}
                       onChange={() => handleMonthToggle(m)}
-                      style={{ cursor: 'pointer', accentColor: 'var(--accent-indigo)', width: '16px', height: '16px' }}
+                      style={{ cursor: 'pointer', accentColor: 'var(--accent-navy)', width: '16px', height: '16px' }}
                     />
                     {m === 'All' ? 'Semua Bulan' : m}
                   </label>

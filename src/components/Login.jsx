@@ -34,7 +34,7 @@ const Login = ({ onLogin }) => {
         borderRadius: '16px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)'
       }}>
         <div style={{ textAlign: 'center' }}>
-          <h1 style={{ color: 'var(--accent-indigo)', fontSize: '1.75rem', marginBottom: '0.5rem' }}>SENTRAMEDIKA</h1>
+          <h1 style={{ color: 'var(--accent-navy)', fontSize: '1.75rem', marginBottom: '0.5rem' }}>SENTRAMEDIKA</h1>
           <p style={{ color: 'var(--text-muted)' }}>Silakan login untuk mengakses Dashboard</p>
         </div>
 
@@ -81,7 +81,7 @@ const Login = ({ onLogin }) => {
             <div style={{ 
               backgroundColor: 'var(--bg-card)', padding: '0.5rem 1rem', 
               borderRadius: '8px', border: '1px solid var(--border-color)', 
-              fontWeight: 'bold', color: 'var(--accent-indigo)' 
+              fontWeight: 'bold', color: 'var(--accent-navy)' 
             }}>
               {num1} + {num2} = 
             </div>
@@ -100,7 +100,7 @@ const Login = ({ onLogin }) => {
           </div>
 
           <button type="submit" style={{
-            marginTop: '0.5rem', padding: '0.75rem', backgroundColor: 'var(--accent-indigo)',
+            marginTop: '0.5rem', padding: '0.75rem', backgroundColor: 'var(--accent-navy)',
             color: 'white', border: 'none', borderRadius: '8px', fontWeight: '600',
             cursor: 'pointer', transition: 'background-color 0.2s'
           }}>
