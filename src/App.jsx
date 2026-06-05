@@ -311,42 +311,38 @@ const App = () => {
               <TrendChart data={computedData.trendBulanan} title={`Tren Pendapatan Bulanan (${selected === 'All' ? 'Semua Cabang' : selected})`} />
             )}
 
-            {selected !== 'All' && (
-              <>
-                <ComparisonChart data={computedData.topUntung} title="Top 10 Kasus Menguntungkan (iDRG vs INACBG)" />
-                <ComparisonChart data={computedData.topRugi} title="Top 10 Kasus Merugikan (iDRG vs INACBG)" />
-                
-                <DataTable 
-                  title="Top 25 Kasus Paling Menguntungkan" 
-                  data={computedData.topUntung} 
-                  columns={caseColumns} 
-                />
-                
-                <DataTable 
-                  title="Top 25 Kasus Paling Merugikan" 
-                  data={computedData.topRugi} 
-                  columns={caseColumns} 
-                />
+              <ComparisonChart data={computedData.topUntung} title="Top 10 Kasus Menguntungkan (iDRG vs INACBG)" />
+              <ComparisonChart data={computedData.topRugi} title="Top 10 Kasus Merugikan (iDRG vs INACBG)" />
+              
+              <DataTable 
+                title="Top 25 Kasus Paling Menguntungkan" 
+                data={computedData.topUntung} 
+                columns={caseColumns} 
+              />
+              
+              <DataTable 
+                title="Top 25 Kasus Paling Merugikan" 
+                data={computedData.topRugi} 
+                columns={caseColumns} 
+              />
 
-                <DataTable 
-                  title="Top 10 Diagnosa Utama" 
-                  data={computedData.topDiagUtama} 
-                  columns={top10Columns} 
-                />
+              <DataTable 
+                title="Top 10 Diagnosa Utama" 
+                data={computedData.topDiagUtama} 
+                columns={top10Columns} 
+              />
 
-                <DataTable 
-                  title="Top 10 Diagnosa Sekunder" 
-                  data={computedData.topDiagSekunder} 
-                  columns={top10Columns} 
-                />
+              <DataTable 
+                title="Top 10 Diagnosa Sekunder" 
+                data={computedData.topDiagSekunder} 
+                columns={top10Columns} 
+              />
 
-                <DataTable 
-                  title="Top 10 Tindakan" 
-                  data={computedData.topTindakan} 
-                  columns={top10Columns} 
-                />
-              </>
-            )}
+              <DataTable 
+                title="Top 10 Tindakan" 
+                data={computedData.topTindakan} 
+                columns={top10Columns} 
+              />
             
             {selected === 'All' && (
               <div className="glass-card table-section">
