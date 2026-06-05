@@ -4,14 +4,22 @@ import StatCard from './components/StatCard';
 import ComparisonChart from './components/ComparisonChart';
 import TrendChart from './components/TrendChart';
 import DataTable from './components/DataTable';
+import Login from './components/Login';
+import CompetencyAnalysis from './components/CompetencyAnalysis';
 import dataJson from './assets/data.json';
 import { Users, Coins, Calculator, TrendingUp, Menu, Calendar } from 'lucide-react';
 
 const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [activeMenu, setActiveMenu] = useState('dashboard');
   const [selected, setSelected] = useState('All');
   const [ptdFilter, setPtdFilter] = useState('All'); // 'All', '1' (Ranap), '2' (Rajal)
   const [selectedMonths, setSelectedMonths] = useState(['All']);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  if (!isAuthenticated) {
+    return <Login onLogin={() => setIsAuthenticated(true)} />;
+  }
   
   const handleMonthToggle = (month) => {
     if (month === 'All') {
@@ -147,6 +155,8 @@ const App = () => {
         onSelect={(h) => { setSelected(h); setIsSidebarOpen(false); }} 
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
+        activeMenu={activeMenu}
+        setActiveMenu={setActiveMenu}
       />
       
       <div className="main-content">
@@ -156,7 +166,7 @@ const App = () => {
               <Menu size={24} />
             </button>
             <div>
-              <h1>Dashboard Analisis iDRG vs INACBG</h1>
+              <h1>Dashboard {activeMenu === 'kompetensi' ? 'Analisis Kompetensi' : 'Analisis iDRG vs INACBG'}</h1>
               <p style={{ color: 'var(--text-muted)', marginTop: '0.25rem' }}>
                 {selected === 'All' ? 'Ringkasan Seluruh Cabang Sentra Medika' : `Detail Analisis Cabang ${selected}`}
               </p>
@@ -221,67 +231,80 @@ const App = () => {
           </div>
         </div>
 
-        <div className="stats-grid">
-          <StatCard title="Total Kasus" value={computedData.summary.total_cases} icon={Users} />
-          <StatCard title="Total Tarif INACBG" value={computedData.summary.tarif_inacbg} icon={Coins} isCurrency={true} />
-          <StatCard title="Total Tarif iDRG" value={computedData.summary.tarif_idrg} icon={Calculator} isCurrency={true} />
-          <StatCard title="Selisih iDRG - INACBG" value={computedData.summary.selisih} icon={TrendingUp} isCurrency={true} isDiff={true} />
-        </div>
-
-        {computedData.trendBulanan && computedData.trendBulanan.length > 0 && (
-          <TrendChart data={computedData.trendBulanan} title={`Tren Pendapatan Bulanan (${selected === 'All' ? 'Semua Cabang' : selected})`} />
-        )}
-
-        {selected !== 'All' && (
-          <>
-            <ComparisonChart data={computedData.topUntung} title="Top 10 Kasus Menguntungkan (iDRG vs INACBG)" />
-            <ComparisonChart data={computedData.topRugi} title="Top 10 Kasus Merugikan (iDRG vs INACBG)" />
-            
-            <DataTable 
-              title="Top 25 Kasus Paling Menguntungkan" 
-              data={computedData.topUntung} 
-              columns={caseColumns} 
+        {activeMenu === 'kompetensi' ? (
+          <div style={{ marginTop: '1.5rem' }}>
+            <CompetencyAnalysis 
+              data={selectedMonths.includes('All') ? 
+                (selected === 'All' ? dataJson.data['All'][ptdFilter] : dataJson.data['All'][ptdFilter].hospitals[selected]) 
+                : null /* If multiple months selected, you may need a merged competence object, or just pass the first month for now. We assume 'All' month works. */}
+              selectedHospital={selected}
             />
-            
-            <DataTable 
-              title="Top 25 Kasus Paling Merugikan" 
-              data={computedData.topRugi} 
-              columns={caseColumns} 
-            />
-
-            <DataTable 
-              title="Top 10 Diagnosa Utama" 
-              data={computedData.topDiagUtama} 
-              columns={top10Columns} 
-            />
-
-            <DataTable 
-              title="Top 10 Diagnosa Sekunder" 
-              data={computedData.topDiagSekunder} 
-              columns={top10Columns} 
-            />
-
-            <DataTable 
-              title="Top 10 Tindakan" 
-              data={computedData.topTindakan} 
-              columns={top10Columns} 
-            />
-          </>
-        )}
-        
-        {selected === 'All' && (
-          <div className="glass-card table-section">
-            <div className="section-title">
-              <TrendingUp size={20} color="var(--accent-indigo)" />
-              Perbandingan Pendapatan INACBG vs iDRG per Cabang
-            </div>
-            <div className="chart-wrapper">
-              <ComparisonChart 
-                data={computedData.comparisonHospitals} 
-                title="" 
-              />
-            </div>
           </div>
+        ) : (
+          <>
+            <div className="stats-grid">
+              <StatCard title="Total Kasus" value={computedData.summary.total_cases} icon={Users} />
+              <StatCard title="Total Tarif INACBG" value={computedData.summary.tarif_inacbg} icon={Coins} isCurrency={true} />
+              <StatCard title="Total Tarif iDRG" value={computedData.summary.tarif_idrg} icon={Calculator} isCurrency={true} />
+              <StatCard title="Selisih iDRG - INACBG" value={computedData.summary.selisih} icon={TrendingUp} isCurrency={true} isDiff={true} />
+            </div>
+
+            {computedData.trendBulanan && computedData.trendBulanan.length > 0 && (
+              <TrendChart data={computedData.trendBulanan} title={`Tren Pendapatan Bulanan (${selected === 'All' ? 'Semua Cabang' : selected})`} />
+            )}
+
+            {selected !== 'All' && (
+              <>
+                <ComparisonChart data={computedData.topUntung} title="Top 10 Kasus Menguntungkan (iDRG vs INACBG)" />
+                <ComparisonChart data={computedData.topRugi} title="Top 10 Kasus Merugikan (iDRG vs INACBG)" />
+                
+                <DataTable 
+                  title="Top 25 Kasus Paling Menguntungkan" 
+                  data={computedData.topUntung} 
+                  columns={caseColumns} 
+                />
+                
+                <DataTable 
+                  title="Top 25 Kasus Paling Merugikan" 
+                  data={computedData.topRugi} 
+                  columns={caseColumns} 
+                />
+
+                <DataTable 
+                  title="Top 10 Diagnosa Utama" 
+                  data={computedData.topDiagUtama} 
+                  columns={top10Columns} 
+                />
+
+                <DataTable 
+                  title="Top 10 Diagnosa Sekunder" 
+                  data={computedData.topDiagSekunder} 
+                  columns={top10Columns} 
+                />
+
+                <DataTable 
+                  title="Top 10 Tindakan" 
+                  data={computedData.topTindakan} 
+                  columns={top10Columns} 
+                />
+              </>
+            )}
+            
+            {selected === 'All' && (
+              <div className="glass-card table-section">
+                <div className="section-title">
+                  <TrendingUp size={20} color="var(--accent-indigo)" />
+                  Perbandingan Pendapatan INACBG vs iDRG per Cabang
+                </div>
+                <div className="chart-wrapper">
+                  <ComparisonChart 
+                    data={computedData.comparisonHospitals} 
+                    title="" 
+                  />
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
