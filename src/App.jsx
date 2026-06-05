@@ -119,8 +119,37 @@ const App = () => {
       };
     });
 
+    const kompetensi = {
+      sesuai_kasus: 0,
+      sesuai_tarif: 0,
+      tidak_sesuai_kasus: 0,
+      tidak_sesuai_tarif: 0,
+      top_sesuai: [],
+      top_tidak_sesuai: [],
+      layanan_stats: []
+    };
+
+    nodes.forEach(n => {
+      if (n.kompetensi) {
+        kompetensi.sesuai_kasus += n.kompetensi.sesuai_kasus || 0;
+        kompetensi.sesuai_tarif += n.kompetensi.sesuai_tarif || 0;
+        kompetensi.tidak_sesuai_kasus += n.kompetensi.tidak_sesuai_kasus || 0;
+        kompetensi.tidak_sesuai_tarif += n.kompetensi.tidak_sesuai_tarif || 0;
+      }
+    });
+
+    // Merge kompetensi lists using the same function
+    const mergedTopSesuai = mergeLists('top_sesuai', ['KOMP_ICD_CODE', 'KOMP_LAYANAN', 'KOMP_RS_LVL'], ['Jumlah_Kasus', 'Total_Tarif_iDRG'], nodes.map(n => n.kompetensi || {}));
+    kompetensi.top_sesuai = mergedTopSesuai.sort((a,b) => b.Total_Tarif_iDRG - a.Total_Tarif_iDRG).slice(0, 50);
+
+    const mergedTopTidakSesuai = mergeLists('top_tidak_sesuai', ['KOMP_ICD_CODE', 'KOMP_LAYANAN', 'KOMP_RS_LVL'], ['Jumlah_Kasus', 'Total_Tarif_iDRG'], nodes.map(n => n.kompetensi || {}));
+    kompetensi.top_tidak_sesuai = mergedTopTidakSesuai.sort((a,b) => b.Total_Tarif_iDRG - a.Total_Tarif_iDRG).slice(0, 50);
+
+    const mergedLayanan = mergeLists('layanan_stats', ['Layanan'], ['Jumlah_Kasus', 'Total_Tarif'], nodes.map(n => n.kompetensi || {}));
+    kompetensi.layanan_stats = mergedLayanan.sort((a,b) => b.Total_Tarif - a.Total_Tarif);
+
     return {
-      summary, topUntung, topRugi, topDiagUtama, topDiagSekunder, topTindakan, trendBulanan, comparisonHospitals
+      summary, topUntung, topRugi, topDiagUtama, topDiagSekunder, topTindakan, trendBulanan, comparisonHospitals, kompetensi
     };
   }, [selected, ptdFilter, selectedMonths]);
 
@@ -233,9 +262,7 @@ const App = () => {
         {activeMenu === 'kompetensi' ? (
           <div style={{ marginTop: '1.5rem' }}>
             <CompetencyAnalysis 
-              data={selectedMonths.includes('All') ? 
-                (selected === 'All' ? dataJson.data['All'][ptdFilter] : dataJson.data['All'][ptdFilter].hospitals[selected]) 
-                : null /* If multiple months selected, you may need a merged competence object, or just pass the first month for now. We assume 'All' month works. */}
+              data={{ kompetensi: computedData.kompetensi }}
               selectedHospital={selected}
             />
           </div>

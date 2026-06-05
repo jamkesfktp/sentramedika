@@ -14,7 +14,7 @@ const CompetencyAnalysis = ({ data, selectedHospital }) => {
     );
   }
 
-  const { sesuai_kasus, sesuai_tarif, tidak_sesuai_kasus, tidak_sesuai_tarif, top_tidak_sesuai, layanan_stats } = data.kompetensi;
+  const { sesuai_kasus, sesuai_tarif, tidak_sesuai_kasus, tidak_sesuai_tarif, top_tidak_sesuai, top_sesuai, layanan_stats } = data.kompetensi;
   
   const total_kasus = sesuai_kasus + tidak_sesuai_kasus;
   const persen_sesuai = total_kasus > 0 ? ((sesuai_kasus / total_kasus) * 100).toFixed(1) : 0;
@@ -61,6 +61,21 @@ const CompetencyAnalysis = ({ data, selectedHospital }) => {
     return null;
   };
 
+  const CustomScatterTooltipSesuai = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', padding: '1rem', border: '1px solid var(--border-color)', borderRadius: '8px', boxShadow: 'var(--card-shadow)', fontSize: '0.875rem' }}>
+          <p style={{ fontWeight: 'bold', color: 'var(--accent-navy)', marginBottom: '0.5rem' }}>{data.KOMP_ICD_CODE} - {data.KOMP_ICD_NAMA}</p>
+          <p style={{ color: 'var(--text-main)' }}>Layanan: {data.KOMP_LAYANAN}</p>
+          <p style={{ color: 'var(--text-main)' }}>Jumlah Kasus: <strong>{data.Jumlah_Kasus}</strong></p>
+          <p style={{ color: 'var(--accent-teal)' }}>Pendapatan Tarif: <strong>{formatCurrency(data.Total_Tarif_iDRG)}</strong></p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       
@@ -94,6 +109,19 @@ const CompetencyAnalysis = ({ data, selectedHospital }) => {
           <h2 style={{ fontSize: '1.1rem', margin: 0 }}>Data Analisis Kompetensi: {selectedHospital === 'All' ? 'Seluruh Cabang Sentra Medika' : `Cabang ${selectedHospital}`}</h2>
           <p style={{ fontSize: '0.8rem', opacity: 0.8, margin: 0, marginTop: '2px' }}>Total {total_kasus} kasus klaim dianalisis terhadap standar kompetensi</p>
         </div>
+      </div>
+
+      {/* Management Insight Card */}
+      <div className="glass-card" style={{ padding: '1.5rem', background: 'linear-gradient(to right, rgba(21, 30, 61, 0.05), transparent)' }}>
+        <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-navy)', marginBottom: '0.75rem', fontSize: '1.1rem' }}>
+          <Info size={20} /> Insight Profesional Manajemen
+        </h3>
+        <p style={{ fontSize: '0.95rem', color: 'var(--text-main)', lineHeight: '1.6', margin: 0 }}>
+          Berdasarkan data saat ini, <strong>{persen_tidak}% ({tidak_sesuai_kasus} kasus)</strong> ditangani di luar dari kompetensi optimal rumah sakit, 
+          yang membuka potensi selisih tarif atau risiko audit sebesar <strong>{formatCurrency(tidak_sesuai_tarif)}</strong>. 
+          Manajemen disarankan untuk mengevaluasi kelompok layanan tertinggi pada tabel rekapitulasi di bawah, 
+          baik melalui peningkatan kapasitas fasilitas dan kredensial DPJP, maupun melakukan perbaikan rujukan kasus kompleks.
+        </p>
       </div>
 
       {/* Main Stats and Pie Chart */}
@@ -149,7 +177,43 @@ const CompetencyAnalysis = ({ data, selectedHospital }) => {
         </div>
       </div>
 
-      {/* Scatter Plot */}
+      {/* Scatter Plots Container */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '1.5rem' }}>
+        
+        {/* Scatter Plot Sesuai Kompetensi */}
+        {top_sesuai && top_sesuai.length > 0 && (
+          <div className="glass-card" style={{ padding: '1.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+              <CheckCircle size={20} color="var(--accent-teal)" />
+              <h3 style={{ fontSize: '1.1rem', color: 'var(--text-main)' }}>Peta Kasus: Sesuai Kompetensi</h3>
+            </div>
+            <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+              Visualisasi penyakit dengan kompetensi yang sesuai. Kuadran kanan atas adalah tulang punggung (<em>backbone</em>) layanan Anda.
+            </p>
+            <div style={{ width: '100%', height: '350px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+                  <XAxis 
+                    type="number" dataKey="Jumlah_Kasus" name="Volume" 
+                    label={{ value: 'Jumlah Kasus', position: 'insideBottom', offset: -10, fill: 'var(--text-muted)' }} 
+                    tick={{ fill: 'var(--text-muted)', fontSize: 12 }}
+                  />
+                  <YAxis 
+                    type="number" dataKey="Total_Tarif_iDRG" name="Tarif" 
+                    label={{ value: 'Pendapatan Tarif (iDRG)', angle: -90, position: 'insideLeft', offset: 0, fill: 'var(--text-muted)' }} 
+                    tickFormatter={(val) => `Rp ${(val/1000000).toFixed(0)}M`}
+                    tick={{ fill: 'var(--text-muted)', fontSize: 12 }}
+                  />
+                  <Tooltip content={<CustomScatterTooltipSesuai />} cursor={{ strokeDasharray: '3 3' }} />
+                  <Scatter name="Diagnosa" data={top_sesuai} fill="var(--accent-teal)" fillOpacity={0.7} />
+                </ScatterChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
+
+        {/* Scatter Plot Tidak Sesuai */}
       {top_tidak_sesuai && top_tidak_sesuai.length > 0 && (
         <div className="glass-card" style={{ padding: '1.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
@@ -159,32 +223,33 @@ const CompetencyAnalysis = ({ data, selectedHospital }) => {
           <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
             Grafik ini memetakan penyakit berdasarkan <strong>Volume Kasus (Sumbu X)</strong> dan <strong>Risiko Finansial (Sumbu Y)</strong>. Titik di sudut kanan atas menunjukkan penyakit dengan risiko dan jumlah kasus paling tinggi.
           </p>
-          <div style={{ width: '100%', height: '400px' }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
-                <XAxis 
-                  type="number" 
-                  dataKey="Jumlah_Kasus" 
-                  name="Volume Kasus" 
-                  label={{ value: 'Jumlah Kasus', position: 'insideBottom', offset: -10, fill: 'var(--text-muted)' }} 
-                  tick={{ fill: 'var(--text-muted)', fontSize: 12 }}
-                />
-                <YAxis 
-                  type="number" 
-                  dataKey="Total_Tarif_iDRG" 
-                  name="Risiko Tarif (Rp)" 
-                  label={{ value: 'Potensi Risiko Tarif (iDRG)', angle: -90, position: 'insideLeft', offset: 0, fill: 'var(--text-muted)' }} 
-                  tickFormatter={(val) => `Rp ${(val/1000000).toFixed(0)}M`}
-                  tick={{ fill: 'var(--text-muted)', fontSize: 12 }}
-                />
-                <Tooltip content={<CustomScatterTooltip />} cursor={{ strokeDasharray: '3 3' }} />
-                <Scatter name="Diagnosa" data={top_tidak_sesuai} fill="#ef4444" fillOpacity={0.7} />
-              </ScatterChart>
-            </ResponsiveContainer>
+            <div style={{ width: '100%', height: '350px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+                  <XAxis 
+                    type="number" 
+                    dataKey="Jumlah_Kasus" 
+                    name="Volume Kasus" 
+                    label={{ value: 'Jumlah Kasus', position: 'insideBottom', offset: -10, fill: 'var(--text-muted)' }} 
+                    tick={{ fill: 'var(--text-muted)', fontSize: 12 }}
+                  />
+                  <YAxis 
+                    type="number" 
+                    dataKey="Total_Tarif_iDRG" 
+                    name="Risiko Tarif (Rp)" 
+                    label={{ value: 'Potensi Risiko Tarif (iDRG)', angle: -90, position: 'insideLeft', offset: 0, fill: 'var(--text-muted)' }} 
+                    tickFormatter={(val) => `Rp ${(val/1000000).toFixed(0)}M`}
+                    tick={{ fill: 'var(--text-muted)', fontSize: 12 }}
+                  />
+                  <Tooltip content={<CustomScatterTooltip />} cursor={{ strokeDasharray: '3 3' }} />
+                  <Scatter name="Diagnosa" data={top_tidak_sesuai} fill="#ef4444" fillOpacity={0.7} />
+                </ScatterChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Tables */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
