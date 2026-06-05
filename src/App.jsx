@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import StatCard from './components/StatCard';
 import ComparisonChart from './components/ComparisonChart';
@@ -16,6 +16,37 @@ const App = () => {
   const [ptdFilter, setPtdFilter] = useState('All'); // 'All', '1' (Ranap), '2' (Rajal)
   const [selectedMonths, setSelectedMonths] = useState(['All']);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Auto-logout after 5 minutes of inactivity
+  useEffect(() => {
+    let timeoutId;
+
+    const resetTimer = () => {
+      clearTimeout(timeoutId);
+      if (isAuthenticated) {
+        timeoutId = setTimeout(() => {
+          setIsAuthenticated(false);
+          alert('Sesi Anda telah berakhir karena tidak ada aktivitas selama 5 menit. Silakan login kembali untuk keamanan data.');
+        }, 5 * 60 * 1000); // 5 minutes in milliseconds
+      }
+    };
+
+    if (isAuthenticated) {
+      window.addEventListener('mousemove', resetTimer);
+      window.addEventListener('keypress', resetTimer);
+      window.addEventListener('click', resetTimer);
+      window.addEventListener('scroll', resetTimer);
+      resetTimer(); // Initialize timer
+    }
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('mousemove', resetTimer);
+      window.removeEventListener('keypress', resetTimer);
+      window.removeEventListener('click', resetTimer);
+      window.removeEventListener('scroll', resetTimer);
+    };
+  }, [isAuthenticated]);
   
   const handleMonthToggle = (month) => {
     if (month === 'All') {
