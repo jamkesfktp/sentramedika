@@ -17,7 +17,9 @@ const Login = ({ onLogin }) => {
     }
     
     if (username === 'puspa' && password === 'sentra123456') {
-      onLogin();
+      onLogin('admin');
+    } else if (username === 'nano' && password === 'Nano123456') {
+      onLogin('nano');
     } else {
       setError('Username atau password salah!');
     }

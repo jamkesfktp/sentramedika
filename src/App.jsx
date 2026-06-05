@@ -11,6 +11,7 @@ import { Users, Coins, Calculator, TrendingUp, Menu, Calendar } from 'lucide-rea
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState('admin');
   const [activeMenu, setActiveMenu] = useState('dashboard');
   const [selected, setSelected] = useState('All');
   const [ptdFilter, setPtdFilter] = useState('All'); // 'All', '1' (Ranap), '2' (Rajal)
@@ -205,18 +206,27 @@ const App = () => {
   ];
 
   return !isAuthenticated ? (
-    <Login onLogin={() => setIsAuthenticated(true)} />
+    <Login onLogin={(role) => {
+      setUserRole(role);
+      setIsAuthenticated(true);
+      if (role === 'nano') {
+        setSelected('RSHB');
+      } else {
+        setSelected('All');
+      }
+    }} />
   ) : (
     <div className="app-container">
       <Sidebar 
-        hospitals={hospitals} 
+        hospitals={userRole === 'admin' ? hospitals : hospitals.filter(h => h === 'RSHB')} 
         selectedHospital={selected} 
         onSelect={(h) => { setSelected(h); setIsSidebarOpen(false); }} 
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
         activeMenu={activeMenu}
         setActiveMenu={setActiveMenu}
-        onLogout={() => setIsAuthenticated(false)}
+        onLogout={() => { setIsAuthenticated(false); setUserRole('admin'); }}
+        userRole={userRole}
       />
       
       <div className="main-content">

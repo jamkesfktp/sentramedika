@@ -1,7 +1,7 @@
 import React from 'react';
 import { Activity, LayoutDashboard, Building2, X, ClipboardCheck } from 'lucide-react';
 
-const Sidebar = ({ hospitals, selectedHospital, onSelect, isOpen, onClose, activeMenu, setActiveMenu, onLogout }) => {
+const Sidebar = ({ hospitals, selectedHospital, onSelect, isOpen, onClose, activeMenu, setActiveMenu, onLogout, userRole }) => {
   return (
     <div className={`sidebar ${isOpen ? 'open' : ''}`}>
       <div className="sidebar-title" style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
@@ -16,13 +16,15 @@ const Sidebar = ({ hospitals, selectedHospital, onSelect, isOpen, onClose, activ
       
       <div className="sidebar-nav-scroll">
             <div className="nav-section">Lokasi Data</div>
-        <div 
-          onClick={() => onSelect('All')}
-          className={`nav-item ${selectedHospital === 'All' ? 'active' : ''}`}
-        >
-          <LayoutDashboard size={20} />
-          Overview Semua Cabang
-        </div>
+        {userRole === 'admin' && (
+          <div 
+            onClick={() => onSelect('All')}
+            className={`nav-item ${selectedHospital === 'All' ? 'active' : ''}`}
+          >
+            <LayoutDashboard size={20} />
+            Overview Semua Cabang
+          </div>
+        )}
         
         <div 
           onClick={() => setActiveMenu('kompetensi')} 
