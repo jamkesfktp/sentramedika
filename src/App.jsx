@@ -16,10 +16,6 @@ const App = () => {
   const [ptdFilter, setPtdFilter] = useState('All'); // 'All', '1' (Ranap), '2' (Rajal)
   const [selectedMonths, setSelectedMonths] = useState(['All']);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  if (!isAuthenticated) {
-    return <Login onLogin={() => setIsAuthenticated(true)} />;
-  }
   
   const handleMonthToggle = (month) => {
     if (month === 'All') {
@@ -147,7 +143,9 @@ const App = () => {
     { label: 'Tarif iDRG', key: 'Total_Tarif_iDRG', type: 'currency' }
   ];
 
-  return (
+  return !isAuthenticated ? (
+    <Login onLogin={() => setIsAuthenticated(true)} />
+  ) : (
     <div className="app-container">
       <Sidebar 
         hospitals={hospitals} 
@@ -157,6 +155,7 @@ const App = () => {
         onClose={() => setIsSidebarOpen(false)}
         activeMenu={activeMenu}
         setActiveMenu={setActiveMenu}
+        onLogout={() => setIsAuthenticated(false)}
       />
       
       <div className="main-content">

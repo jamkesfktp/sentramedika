@@ -5,9 +5,17 @@ const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [num1] = useState(Math.floor(Math.random() * 10) + 1);
+  const [num2] = useState(Math.floor(Math.random() * 10) + 1);
+  const [captchaInput, setCaptchaInput] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (parseInt(captchaInput) !== num1 + num2) {
+      setError('Captcha salah! Silakan hitung dengan benar.');
+      return;
+    }
+    
     if (username === 'puspa' && password === 'sentra123456') {
       onLogin();
     } else {
@@ -67,6 +75,30 @@ const Login = ({ onLogin }) => {
               required
             />
           </div>
+
+          {/* Captcha Section */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.5rem' }}>
+            <div style={{ 
+              backgroundColor: 'var(--bg-card)', padding: '0.5rem 1rem', 
+              borderRadius: '8px', border: '1px solid var(--border-color)', 
+              fontWeight: 'bold', color: 'var(--accent-indigo)' 
+            }}>
+              {num1} + {num2} = 
+            </div>
+            <input 
+              type="number" 
+              placeholder="Hasil" 
+              value={captchaInput}
+              onChange={(e) => setCaptchaInput(e.target.value)}
+              style={{
+                flex: 1, padding: '0.75rem 1rem',
+                backgroundColor: 'var(--bg-main)', border: '1px solid var(--border-color)',
+                color: 'var(--text-main)', borderRadius: '8px', outline: 'none'
+              }}
+              required
+            />
+          </div>
+
           <button type="submit" style={{
             marginTop: '0.5rem', padding: '0.75rem', backgroundColor: 'var(--accent-indigo)',
             color: 'white', border: 'none', borderRadius: '8px', fontWeight: '600',

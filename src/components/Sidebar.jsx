@@ -1,7 +1,7 @@
 import React from 'react';
 import { Activity, LayoutDashboard, Building2, X, ClipboardCheck } from 'lucide-react';
 
-const Sidebar = ({ hospitals, selectedHospital, onSelect, isOpen, onClose, activeMenu, setActiveMenu }) => {
+const Sidebar = ({ hospitals, selectedHospital, onSelect, isOpen, onClose, activeMenu, setActiveMenu, onLogout }) => {
   return (
     <div className={`sidebar ${isOpen ? 'open' : ''}`}>
       <div className="sidebar-title" style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
@@ -45,6 +45,17 @@ const Sidebar = ({ hospitals, selectedHospital, onSelect, isOpen, onClose, activ
             {hosp}
           </div>
         ))}
+        
+        <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+          <div 
+            onClick={onLogout} 
+            className="nav-item"
+            style={{ color: '#ef4444' }}
+          >
+            <X size={20} />
+            Logout
+          </div>
+        </div>
       </div>
     </div>
   );
