@@ -58,9 +58,10 @@ const App = () => {
       summary.selisih += n.summary.selisih || 0;
     });
 
-    const mergeLists = (listName, idKeys, sumKeys) => {
+    const mergeLists = (listName, idKeys, sumKeys, customNodes = null) => {
       const map = {};
-      nodes.forEach(node => {
+      const sourceNodes = customNodes || nodes;
+      sourceNodes.forEach(node => {
         (node[listName] || []).forEach(item => {
           const id = idKeys.map(k => item[k]).join('|');
           if (!map[id]) map[id] = { ...item };

@@ -15,9 +15,10 @@ const Sidebar = ({ hospitals, selectedHospital, onSelect, isOpen, onClose, activ
       </div>
       
       <div className="sidebar-nav-scroll">
+            <div className="nav-section">Lokasi Data</div>
         <div 
-          onClick={() => { setActiveMenu('dashboard'); onSelect('All'); }} 
-          className={`nav-item ${activeMenu === 'dashboard' && selectedHospital === 'All' ? 'active' : ''}`}
+          onClick={() => onSelect('All')}
+          className={`nav-item ${selectedHospital === 'All' ? 'active' : ''}`}
         >
           <LayoutDashboard size={20} />
           Overview Semua Cabang
@@ -38,8 +39,8 @@ const Sidebar = ({ hospitals, selectedHospital, onSelect, isOpen, onClose, activ
         {hospitals.map(hosp => (
           <div 
             key={hosp} 
-            onClick={() => { setActiveMenu('dashboard'); onSelect(hosp); }}
-            className={`nav-item ${activeMenu === 'dashboard' && selectedHospital === hosp ? 'active' : ''}`}
+            onClick={() => onSelect(hosp)}
+            className={`nav-item ${selectedHospital === hosp ? 'active' : ''}`}
           >
             <Building2 size={20} />
             {hosp}
