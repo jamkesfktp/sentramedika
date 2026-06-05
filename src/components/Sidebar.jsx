@@ -15,16 +15,15 @@ const Sidebar = ({ hospitals, selectedHospital, onSelect, isOpen, onClose, activ
       </div>
       
       <div className="sidebar-nav-scroll">
-            <div className="nav-section">Lokasi Data</div>
-        {userRole === 'admin' && (
-          <div 
-            onClick={() => onSelect('All')}
-            className={`nav-item ${selectedHospital === 'All' ? 'active' : ''}`}
-          >
-            <LayoutDashboard size={20} />
-            Overview Semua Cabang
-          </div>
-        )}
+        <div className="nav-section">Menu Utama</div>
+        
+        <div 
+          onClick={() => setActiveMenu('dashboard')}
+          className={`nav-item ${activeMenu === 'dashboard' ? 'active' : ''}`}
+        >
+          <LayoutDashboard size={20} />
+          Dashboard iDRG
+        </div>
         
         <div 
           onClick={() => setActiveMenu('kompetensi')} 
@@ -34,9 +33,19 @@ const Sidebar = ({ hospitals, selectedHospital, onSelect, isOpen, onClose, activ
           Analisis Kompetensi
         </div>
         
-        <div style={{ display: 'flex', alignItems: 'center', marginTop: '0.5rem', marginBottom: '0.5rem', paddingLeft: '1rem', fontSize: '0.8rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: '700' }}>
-          Cabang RS
+        <div style={{ display: 'flex', alignItems: 'center', marginTop: '1.5rem', marginBottom: '0.5rem', paddingLeft: '1rem', fontSize: '0.8rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: '700' }}>
+          Filter Cabang RS
         </div>
+
+        {userRole === 'admin' && (
+          <div 
+            onClick={() => onSelect('All')}
+            className={`nav-item ${selectedHospital === 'All' ? 'active' : ''}`}
+          >
+            <Building2 size={20} />
+            Semua Cabang
+          </div>
+        )}
         
         {hospitals.map(hosp => (
           <div 
