@@ -188,30 +188,35 @@ const App = () => {
             </div>
 
             {/* Month Filter */}
-            <div className="header-filters" style={{ display: 'flex', gap: '0.5rem', background: 'var(--bg-card)', padding: '0.25rem', borderRadius: '8px', border: '1px solid var(--border-color)', flexWrap: 'wrap' }}>
-              <div style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', color: 'var(--text-muted)' }}>
+            <div className="header-filters" style={{ display: 'flex', gap: '1rem', background: 'var(--bg-card)', padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid var(--border-color)', flexWrap: 'wrap', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', color: 'var(--text-muted)' }}>
                 <Calendar size={16} style={{ marginRight: '6px' }} />
-                <span style={{ fontSize: '0.875rem', fontWeight: '500' }}>Bulan:</span>
+                <span style={{ fontSize: '0.875rem', fontWeight: '500' }}>Filter Bulan:</span>
               </div>
-              {['All', ...availableMonths].map((m) => (
-                <button
-                  key={m}
-                  onClick={() => handleMonthToggle(m)}
-                  style={{
-                    padding: '0.5rem 1rem',
-                    border: 'none',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontWeight: '500',
-                    fontSize: '0.875rem',
-                    backgroundColor: selectedMonths.includes(m) ? 'var(--accent-indigo)' : 'transparent',
-                    color: selectedMonths.includes(m) ? '#fff' : 'var(--text-muted)',
-                    transition: 'all 0.2s'
-                  }}
-                >
-                  {m === 'All' ? 'Semua Bulan' : m}
-                </button>
-              ))}
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                {['All', ...availableMonths].map((m) => (
+                  <label
+                    key={m}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      cursor: 'pointer',
+                      fontSize: '0.875rem',
+                      color: 'var(--text-main)',
+                      fontWeight: selectedMonths.includes(m) ? '600' : '400'
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedMonths.includes(m)}
+                      onChange={() => handleMonthToggle(m)}
+                      style={{ cursor: 'pointer', accentColor: 'var(--accent-indigo)', width: '16px', height: '16px' }}
+                    />
+                    {m === 'All' ? 'Semua Bulan' : m}
+                  </label>
+                ))}
+              </div>
             </div>
           </div>
         </div>
